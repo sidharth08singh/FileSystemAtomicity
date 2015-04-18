@@ -47,3 +47,4 @@
 16695, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/chelseafc.docx, pending
 16695, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/chelseafc.docx, commit
 16695, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/chelseafc.docx, end
+29014, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, pending

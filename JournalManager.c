@@ -520,7 +520,7 @@ int main()
                                 printf("\n");
 				
 				add_log_record_entry("write", "pending", filefullpath, op1.tid);
-				//faulty_put3(data, filefullpath, op1.tid);
+				faulty_put3(data, filefullpath, op1.tid);
 				break;
 			}
 
