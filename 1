@@ -1,0 +1,18 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<string.h>
+#include "LogRecord.h"
+
+void add_log_record_entry(char operation[], char state[], char filename[], char tid[])
+{
+	FILE *fd = NULL;
+	fd = fopen("journal.txt". "a");
+	fprintf(fd, "%s, %s, %s, %s\n", tid, operation, filename, state);
+	fclose(fd);
+}
+
+void create_tid(struct operation *op1)
+{
+	strcpy(op1->tid, "qwerty");
+}

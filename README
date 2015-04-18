@@ -1,0 +1,52 @@
+#########################################################
+INSTALLATION
+#########################################################
+
+step1 : copy the AOS_Project.tar.gz to any $HOME directory on your machine
+step2 : tar -xvzf AOS_Project.tar.gz
+step3 : make clean
+step4 : make 
+
+
+#########################################################
+RUNNING THE PROJECT
+#########################################################
+
+step 1: cd ~/AOS_Project
+step 2: ./project 
+
+step 3: An option menu appears. Select among option 1 to 7. The options available as of now are: 
+	1. Create File
+	2. List All Files
+	3. Read File
+	4. Write to File
+	5. Faulty Write 1 (Abort before Commit) 
+	6. Faulty Write 2 (Abort after Commit)
+	7. Quit
+
+
+#########################################################
+Points to Note
+#########################################################
+
+1) Files are used as an abstraction of sectors in this project. All operations on a file are automatically 
+   recreated on three logical sectors of a file (sectors are implemented as files suffixed with _sector2 and
+   _sector 3). 
+
+2) For this project, the dummy filesystem directory is created upon installation. All files are created in this 
+   directory - $HOME/AOS_Project/dummy_filesystem. 
+
+3) Whenever, a file is created, say - testfile.txt, this application creates two more files to emulate three sector 
+   storage of actual disks. The other two logical sectors are called: testfile.txt_sector2 and testfile.txt_sector3. 
+
+4) All operations are implemented atomically - all or nothing atomicity.  
+
+5) All operations are implemented in separate files. The header files associated with each file can be found in the same
+   directory $HOME/AOS_Project/dummy_filesystem. 
+
+6) While writing new data to a file, user must write on the application console. As of the "!wq" (without quotes) is
+   used as delimiter to terminate writing to the console. 
+
+
+
+	
