@@ -1,12 +1,15 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<limits.h>
+#define MAX 1000
 
-main()
+int main()
 {
-	char data[100] = "abcdefghijklmnop";
-	printf("%s\n", data);
-	int i = strlen(data)/2;
-	data[i] = '\0';
-	printf("%s\n", data);
+	char a[MAX] = "this is\npoint\nless";
+	char b[MAX];
+	printf("%s", a);
+	sprintf(b, "echo '%s' > /tmp/abc", a);
+	printf("###%s", b);
+	system(b);
 }

@@ -10,10 +10,11 @@
 #include "FaultyWrite1.h"
 #include "FaultyWrite2.h"
 #include "FaultyWrite3.h"
+#include "Recovery.h"
 
 char data[MAX];
 
-enum {CREATE, LIST, READ, WRITE, FWRITE1, FWRITE2, MULWRITE};
+enum {CREATE, LIST, READ, WRITE, FWRITE1, FWRITE2, MULWRITE, BEGINRECOVERY, ENDRECOVERY};
 
 struct arg_thrd
 {
@@ -229,7 +230,7 @@ int main()
 	while(1)
 	{
 		printf("\nOperations Supported - \n");
-        	printf("\n1. Create a New File\n2. List All Files\n3. Read from File\n4. Write to File\n5. Faulty Write 1 (Abort before commit)\n6. Faulty Write 2 (Abort after commit)\n7. Multithreaded Write (Two threads write to the same file simultaneously)\n8. MultiThreaded Write ('n' threads write to the same file simultaneously)\n9. Multithreaded Write & Read(Two threads write to and read from the same file simultaneously)\n10. Recovery after system crash during Write\n11. Delete a File\n12. Exit\n");
+        	printf("\n1. Create a New File\n2. List All Files\n3. Read from File\n4. Write to File\n5. Faulty Write 1 (Abort before commit)\n6. Faulty Write 2 (Abort after commit)\n7. Multithreaded Write (Two threads write to the same file simultaneously)\n8. MultiThreaded Write ('n' threads write to the same file simultaneously)\n9. Multithreaded Write & Read(Two threads write to and read from the same file simultaneously)\n10. Recovery after system crash during Write\n11. Sytem Recovery : Check Journal Log, Identify Conflicts, Ask user to Resolve\n12. Delete a File\n13. Exit\n");
 		printf("\nPick one option:");
 		scanf("%d", &ch);
 		printf("\n");
@@ -523,16 +524,28 @@ int main()
 				faulty_put3(data, filefullpath, op1.tid);
 				break;
 			}
-
+			
 			case 11 : 
 			{
-				printf("Operation Selected : DELETE\n");
+				int recovered_files;
+				recovered_files = 0; 
+				printf("OPERATION SELECTED : System Recovery\n");
+				add_recovery_entry(BEGINRECOVERY);
+				recovered_files = start_recovery();
+				add_recovery_entry(ENDRECOVERY);
+				printf("Recovery Procedure Has Successfully Ended\nTotal Number of Files Recovered : %d", recovered_files);
+				break;
+			}
+
+			case 12 : 
+			{
+				printf("OPERATION SELECTED : DELETE\n");
 				break;
 			}
 
 			default:
 			{
-				if (ch == 12)
+				if (ch == 13)
 				{
 					exit(1);
 				}

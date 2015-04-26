@@ -47,6 +47,15 @@ Points to Note
 6) While writing new data to a file, user must write on the application console. As of the "!wq" (without quotes) is
    used as delimiter to terminate writing to the console. 
 
+########################################################
+To Do
+########################################################
+
+Add recovery mechanism. 
+Check Journal Log for how many writes to sectors have successfully gone through even when commit hasn't happened. 
+If write has successfully gone through only on one sector -> prompt the user to resolve the conflict manually. 
+Apply locks to faultywrite3 to enale multithreading. 
+
 
 
 	

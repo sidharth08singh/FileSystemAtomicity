@@ -48,3 +48,9 @@
 16695, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/chelseafc.docx, commit
 16695, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/chelseafc.docx, end
 29014, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, pending
+29014, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, commit
+29014, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, end
+RECOVERY START, Sun Apr 26 01:57:50 2015
+27661, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, pending
+RECOVERY START, Sun Apr 26 01:59:18 2015
+RECOVERY START, Sun Apr 26 02:02:51 2015
