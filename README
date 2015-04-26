@@ -57,5 +57,9 @@ If write has successfully gone through only on one sector -> prompt the user to 
 Apply locks to faultywrite3 to enale multithreading. 
 
 
-
+########################################################
+1953  git add . 
+ 1954  git commit -a -m "recovery logic added"
+ 1955  git push
+########################################################
 	
