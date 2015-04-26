@@ -12,6 +12,9 @@
 int start_recovery()
 {
 	pthread_mutex_lock(&lock);
+	struct marked_for_recovery* head;
+	head = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+	head->link = NULL;
 	printf("Here in Recovery 1\n");
 	int field1;
 	char field2[MAX];
@@ -32,39 +35,163 @@ int start_recovery()
                 while (fgetsr(buf, sizeof(buf), fd) != NULL)
                 {
 			printf("Here in Recovery 3\n");
-                        if(!strcmp(buf, "RECOVERY END"))
+                        if(strstr(buf, "RECOVERY END") != NULL)
                         {
-				printf("Here in Recovery 4\n");
-                                printf("Log Entry Encountered : %s\n", buf);
-                                strcpy(tmp,buf);
-                                token = strtok(tmp,",");
-                                while(isspace(*token)) token++; //Remove leading whitespaces
-                                field1 = atoi(token);
-	
-				token = strtok(NULL, ",");
-                                while(isspace(*token)) token++; //Remove leading whitespaces
-				strcpy(field2, token);
-			
-				token = strtok(NULL, ",");
-                                while(isspace(*token)) token++; //Remove leading whitespaces
-                                strcpy(field3, token);
-			
-				token = strtok(NULL, ",");
-                                while(isspace(*token)) token++; //Remove leading whitespaces
-                                strcpy(field4, token);
-			
-				if(!strcmp(field4, "pending"))
-				{
-					count++;
-					printf("Running Recovery for %s\n", field3);
-					all_or_nothing_get(field2);	
-				}
+				break;
 			}
 			else
-				break;
+			{
+				if(strstr(buf, "RECOVERY START") == NULL)
+				{
+					printf("Here in Recovery 4\n");
+                                	printf("Log Entry Encountered : %s\n", buf);
+                                	strcpy(tmp,buf);
+                                	token = strtok(tmp,",");
+                                	while(isspace(*token)) token++; //Remove leading whitespaces
+                                	field1 = atoi(token);
+	
+					token = strtok(NULL, ",");
+                                	while(isspace(*token)) token++; //Remove leading whitespaces
+					strcpy(field2, token);
+			
+					token = strtok(NULL, ",");
+                                	while(isspace(*token)) token++; //Remove leading whitespaces
+                                	strcpy(field3, token);
+			
+					token = strtok(NULL, ",");
+                                	while(isspace(*token)) token++; //Remove leading whitespaces
+					size_t ln = strlen(token) - 1; //Remove trailing newlines
+                                	if(token[ln] == '\n')
+                                        	token[ln] = '\0';
+                                	strcpy(field4, token);
+
+					head = create_recovery_list(head, field1, field2, field3, field4);
+				}
+			}
 		}
 	}
+	count = execute_recovery(head);
+	//deallocate_recovery_list(head);
+	//free(head);
 	pthread_mutex_unlock(&lock);
 	return count;
 }
+
+/*
+void deallocate_recovery_list(struct marked_for_recovery* head)
+{
+	struct marked_for_recovery* temp;
+	temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+	temp = head->link;
+	while(temp!=NULL)
+	{
+		head->link = temp->link;
+*/		
+
+int execute_recovery(struct marked_for_recovery* head)
+{
+	printf("In Execute Recovery\n");
+	struct marked_for_recovery* temp;
+	int count = 0; 
+        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+        temp = head->link;
+        while(temp!=NULL)
+        {
+                if(temp->commited != 1)
+                {
+			count++;
+			printf("Running Recovery for %s\n", temp->name);
+                        all_or_nothing_get(temp->name);
+                }
+        }
+        return count;
+}
+
+struct marked_for_recovery* create_recovery_list(struct marked_for_recovery* head, int field1, char field2[], char field3[], char field4[])
+{
+	printf("In Create Recovery List\n");
+	int isExist;
+	isExist = check_tid_in_list(head,field1);
+	struct marked_for_recovery* temp;
+	if(isExist == 0) //tid not present in recovery list. Add to list
+	{
+		printf("TID Not Present: Adding TID\n");
+		temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+
+		temp->link = NULL;
+		/*
+		temp->tid=0;
+		memset(temp->name, 0, MAX);
+		temp->pending = 0;
+		temp->commited = 0;
+		temp->end = 0;
+		*/
+
+		temp->tid = field1;
+		strcpy(temp->name, field3);
+
+		if(!strcmp(field4, "pending"))
+			temp->pending = 1;
+		else if(!strcmp(field4, "commit"))
+			temp->commited = 1;
+		else if(!strcmp(field4, "end"))
+			temp->end = 1;
+
+		if(head->link == NULL) //If the list is Empty
+        	{
+                	head->link = temp;
+                	return head;
+        	}
+
+        	temp->link = head->link;
+        	head->link = temp;
+	}
+	else
+	{
+		//tid already in recovery list. Update. 
+		printf("TID Present, Updating\n");
+		update_recovery_list(head, field1, field4);
+	}
+	return head;
+}
+	
+int check_tid_in_list(struct marked_for_recovery* head, int field1)
+{
+	printf("In check tid in list\n");
+	struct marked_for_recovery* temp;
+        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+        temp = head->link;
+        while(temp!=NULL)
+        {
+                if(temp->tid == field1)
+		{
+                	return 1;
+		}
+        }
+	return 0;
+}
+
+void update_recovery_list(struct marked_for_recovery* head, int field1, char field4[])
+{
+	printf("In update recovery list\n");
+	struct marked_for_recovery* temp;
+        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+        temp = head->link;
+        while(temp!=NULL)
+        {
+                if(temp->tid == field1)
+                {
+                	if(!strcmp(field4, "pending"))
+                        	temp->pending = 1;
+                	else if(!strcmp(field4, "commit"))
+                        	temp->commited = 1;
+                	else if(!strcmp(field4, "end"))
+                        	temp->end = 1;
+			break;
+                }
+        }
+}
+	
+	
+
 	
