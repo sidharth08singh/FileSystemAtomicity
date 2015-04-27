@@ -114,6 +114,7 @@ void read_input(char data[])
 void read_filename(char filename[], char path[], int option)
 {
 	int filecheck;
+	int count=0;
 	memset(filename, 0, MAX);
 	while(1)
 	{
@@ -126,7 +127,11 @@ void read_filename(char filename[], char path[], int option)
 		if(strlen(filename) > 1)
 			break;
 		else
-			printf("Filename can't be an empty string. Please enter again!\n");
+		{
+			if(count != 0)
+				printf("Filename can't be an empty string. Please enter again!\n");
+		}
+		count = 1;
 	}
 
 	// Check if file exists in the Dummy Filesystem. 

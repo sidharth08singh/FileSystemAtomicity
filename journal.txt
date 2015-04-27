@@ -83,3 +83,12 @@ RECOVERY END, Mon Apr 27 01:39:37 2015
 39721, delete, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, end
 RECOVERY START, Mon Apr 27 01:56:24 2015
 RECOVERY END, Mon Apr 27 01:56:24 2015
+18377, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, pending
+18377, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, commit
+18377, create, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, end
+17448, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, pending
+17448, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, commit
+17448, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, end
+28338, delete, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, pending
+28338, delete, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, commit
+28338, delete, /home/sidharth/FileSystemAtomicity/dummy_filesystem/file1, end
