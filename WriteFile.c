@@ -15,8 +15,8 @@ void all_or_nothing_put(char data[], char file_to_write[], int tid)
 	struct FileSector obj1;
 	find_sectors(file_to_write, &obj1); //Find File Sectors
 	check_and_repair(&obj1);
-	printf("## Check And Repair Passed ##\n");
-	printf("## Writing to Sectors Now ##\n");
+	printf("Update...Check And Repair Passed\n\n");
+	printf("Update...Writing to Sectors Now\n\n");
 	write_and_commit(data_to_write, &obj1, tid);
 	return;
 }
@@ -28,7 +28,7 @@ void write_and_commit(char data[], struct FileSector *obj1, int tid)
 	//Write to Sector 1
 	pthread_mutex_lock(&lock);
 	sprintf(write_cmd, "echo \"%s\" >> %s", data, obj1->fs1);
-	printf("## Write Cmd Sector 1 : %s ##\n", write_cmd);
+	//printf("## Write Cmd Sector 1 : %s ##\n", write_cmd);
 	ret = system(write_cmd);
 	if(ret != 0)
 	{
@@ -39,7 +39,7 @@ void write_and_commit(char data[], struct FileSector *obj1, int tid)
 		//Write to Sector 2
 		ret=1;
 		sprintf(write_cmd, "echo \"%s\" >> %s", data, obj1->fs2);
-		printf("## Write Cmd Sector 2 : %s ##\n", write_cmd);
+		//printf("## Write Cmd Sector 2 : %s ##\n", write_cmd);
 		ret = system(write_cmd);
 		if(ret != 0 )
 		{
@@ -52,7 +52,7 @@ void write_and_commit(char data[], struct FileSector *obj1, int tid)
 			add_log_record_entry("write", "commit", obj1->fs1, tid);
 			//Write to Sector 3
 			sprintf(write_cmd, "echo \"%s\" >> %s", data, obj1->fs3);
-			printf("## Write Cmd Sector 3 : %s\n ##", write_cmd);
+			//printf("## Write Cmd Sector 3 : %s\n ##", write_cmd);
 			ret = system(write_cmd);
 			if(ret != 0)
 			{
@@ -60,7 +60,7 @@ void write_and_commit(char data[], struct FileSector *obj1, int tid)
 			}
 			else
 			{
-				printf("## Written successfully to 3 sectors ##");
+				printf("Update...Write Operation Successful on all Sectors\n\n");
 				add_log_record_entry("write", "end", obj1->fs1, tid);
 			}
 		}
@@ -97,7 +97,6 @@ void check_and_repair(struct FileSector *obj1)
 	pthread_mutex_lock(&lock);
 	if(strcmp(obj1->cs1, obj1->cs2) == 0 && strcmp(obj1->cs2, obj1->cs3) == 0 ) 
 	{
-		printf("Return 1\n");
 		pthread_mutex_unlock(&lock);	
 		return;	
 	}
@@ -111,7 +110,6 @@ void check_and_repair(struct FileSector *obj1)
 		if(ret != 0)
 			printf("copy operation failed\n");
 		else
-			printf("Return 2\n");
 			pthread_mutex_unlock(&lock);
 			return;
 	}
@@ -125,7 +123,6 @@ void check_and_repair(struct FileSector *obj1)
 		if(ret != 0)
 			printf("copy operation failed\n"); 
 		else
-			printf("Return 3\n");
 			pthread_mutex_unlock(&lock);
 			return;
 	}

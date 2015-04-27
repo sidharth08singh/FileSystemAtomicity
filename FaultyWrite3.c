@@ -11,8 +11,8 @@ void faulty_put3(char data[], char file_to_write[], int tid)
 	struct FileSector obj1;
 	find_sectors(file_to_write, &obj1); //Find File Sectors
 	check_and_repair(&obj1);
-	printf("## Check And Repair Passed ##\n");
-	printf("## Writing to Sectors Now ##\n");
+	printf("Update...Check And Repair Passed\n\n");
+	printf("Update...Writing to Sectors Now\n\n");
 	faulty_write_crash_before_commit(data, &obj1, tid);
 	return;
 }
@@ -24,7 +24,6 @@ void faulty_write_crash_before_commit(char data[], struct FileSector *obj1, int 
 	int corrupt_marker_end;
 
 	sprintf(write_cmd, "echo \"%s\" >> %s", data, obj1->fs1);
-	printf("## Write Cmd Sector 1 : %s ##\n", write_cmd);
 	ret = system(write_cmd);
 	if(ret != 0)
 	{
@@ -44,7 +43,6 @@ void faulty_write_crash_before_commit(char data[], struct FileSector *obj1, int 
 
 		// Write corrupted data to Sector 1
 		sprintf(write_cmd, "echo \"%s\" >> %s", data, obj1->fs2);
-		printf("## Write Cmd Sector 2 : %s ##\n", write_cmd);
 		ret = system(write_cmd);
 		if(ret != 0)
 		{
@@ -52,7 +50,8 @@ void faulty_write_crash_before_commit(char data[], struct FileSector *obj1, int 
 		}
 		else
 		{
-			printf("System Crash while Write in Progress!\n");
+			printf("\nUpdate...System Crashed while Write in Progress\n\n");
+			printf("Update...Sector 1 : New Data, Sector 2 : Damaged, Sector 3 : Old Data\n");
 		}
 	}
 }

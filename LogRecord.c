@@ -28,15 +28,14 @@ void add_recovery_entry(int state)
 	struct tm * timeinfo;
   	time ( &rawtime );
   	timeinfo = localtime ( &rawtime );
-  	printf ( "Current local time and date: %s", asctime (timeinfo) );
 	
 	FILE *fd = NULL;
 	fd = fopen("journal.txt", "a");
-	if(state == 8)
+	if(state == 7)
 	{
 		fprintf(fd, "RECOVERY START, %s", asctime (timeinfo));
 	}
-	else if(state == 9)
+	else if(state == 8)
 	{
 		fprintf(fd, "RECOVERY END, %s", asctime (timeinfo));
 	}
@@ -92,7 +91,6 @@ struct last_transaction search_log_record_entry(char filename[])
     		}
   	}
   	fclose(fd);
-	printf("Returning!!\n");
   	return lt ;
 }
 

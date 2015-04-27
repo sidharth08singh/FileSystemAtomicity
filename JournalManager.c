@@ -65,6 +65,7 @@ int isFileExist(char filename[], char path[])
 	strcat(file_sector3, obj1.fs3);
 
 	// Check if all three sectors are present
+	printf("\n\nUpdate...Checking if all sectors exist\n\n");
         sprintf(list_cmd, "ls -ltrh %s", file_sector1);
 	check1 = system(list_cmd);
 	if(check1 == 0)
@@ -204,7 +205,11 @@ int main()
 	check = 1;
 	memset(sys_cmd, 0, MAX);
 	sprintf(sys_cmd, "ls -ltrh %s", path);
+	printf("\n\n--------------------------------------------------------\n\n");
+	printf("\n\nUpdate...Checking If Dummy File System Exists\n\n");
 	check=system(sys_cmd);
+	printf("\n\n--------------------------------------------------------\n\n");
+	
 	if(check != 0)
 	{
 		// Create the Dummy FileSystem. 
@@ -214,22 +219,24 @@ int main()
 		check = system(sys_cmd);
 		if(check != 0) 
 		{
-			printf("Exiting! Dummy Filesystem could not be created. Please check permissions or create manually - %s\n", path);
+			printf("Exiting...Dummy Filesystem could not be created. Please check permissions or create manually - %s\n", path);
 			exit(1);
 		}
 		else
 		{
-			printf("Dummy Filesystem Created\n");
+			printf("Update...Dummy Filesystem Created\n");
 		}
 	}
 	else
 	{
-		printf("Dummy File System Exists. Proceeding Now.\n");
+		printf("\n\nCheck Complete...Dummy File System Exists. Proceeding Now...\n\n");
 	}
 
 	while(1)
 	{
+		printf("\n-----------------------------------------------\n");
 		printf("\nOperations Supported - \n");
+		printf("\n-----------------------------------------------\n");
         	printf("\n1. Create a New File\n2. List All Files\n3. Read from File\n4. Write to File\n5. Faulty Write 1 (Abort before commit)\n6. Faulty Write 2 (Abort after commit)\n7. Multithreaded Write (Two threads write to the same file simultaneously)\n8. MultiThreaded Write ('n' threads write to the same file simultaneously)\n9. Multithreaded Write & Read(Two threads write to and read from the same file simultaneously)\n10. Recovery after system crash during Write\n11. Sytem Recovery : Check Journal Log, Identify Conflicts, Ask user to Resolve\n12. Delete a File\n13. Exit\n");
 		printf("\nPick one option:");
 		scanf("%d", &ch);
@@ -529,11 +536,15 @@ int main()
 			{
 				int recovered_files;
 				recovered_files = 0; 
+				system("clear");
 				printf("OPERATION SELECTED : System Recovery\n");
 				add_recovery_entry(BEGINRECOVERY);
 				recovered_files = start_recovery();
 				add_recovery_entry(ENDRECOVERY);
-				printf("Recovery Procedure Has Successfully Ended\nTotal Number of Files Recovered : %d", recovered_files);
+				if(recovered_files == 0)
+					printf("Recovery Finished. No Files To Recover\n");
+				else
+					printf("Recovery Procedure Has Successfully Finished\n\nTotal Number of Files Recovered : %d", recovered_files);
 				break;
 			}
 

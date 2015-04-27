@@ -11,8 +11,8 @@ void faulty_put2(char data[], char file_to_write[], int tid)
 	struct FileSector obj1;
 	find_sectors(file_to_write, &obj1); //Find File Sectors
 	check_and_repair(&obj1);
-	printf("## Check And Repair Passed ##\n");
-	printf("## Writing to Sectors Now ##\n");
+	printf("Update...Check And Repair Passed\n\n");
+	printf("Update...Writing to Sectors Now\n\n");
 	faulty_write_abort_after_commit(data, &obj1, tid);
 	return;
 }
@@ -23,7 +23,6 @@ void faulty_write_abort_after_commit(char data[], struct FileSector *obj1, int t
 	int ret=1;
 	//Write to Sector 1
 	sprintf(write_cmd, "echo \"%s\" >> %s", data, obj1->fs1);
-	printf("## Write Cmd Sector 1 : %s ##\n", write_cmd);
 	ret = system(write_cmd);
 	if(ret != 0)
 	{
@@ -33,7 +32,6 @@ void faulty_write_abort_after_commit(char data[], struct FileSector *obj1, int t
 	{
 		//Write to Sector 2
 		sprintf(write_cmd, "echo \"%s\" >> %s", data, obj1->fs2);
-		printf("## Write Cmd Sector 2 : %s ##\n", write_cmd);
 		ret = system(write_cmd);
 		if(ret != 0)
 		{
@@ -44,6 +42,7 @@ void faulty_write_abort_after_commit(char data[], struct FileSector *obj1, int t
 			//Commit
 			add_log_record_entry("write", "commit", obj1->fs1, tid);
 			//Abort before Writing to Sector 3
+			printf("Update...Write successful on 2 out of 3 sectors. Third Sector untouched\n\n");
 			add_log_record_entry("write", "abort", obj1->fs1, tid);
 		}
 	}

@@ -25,10 +25,10 @@ void all_or_nothing_get(char file_to_read[])
 	pthread_mutex_lock(&lock);
 	if(!strcmp(obj1.cs1, obj1.cs2))
 	{
-		printf("************************************************************************\n");
+		printf("\n\n************************************************************************\n\n");
 		sprintf(read_cmd, "cat %s", obj1.fs1);
 		ret = system(read_cmd);
-		printf("************************************************************************\n");
+		printf("\n\n************************************************************************\n\n");
 		if(ret != 0)
 		{
 			printf("Failure Reading from Sector\n");
@@ -41,10 +41,10 @@ void all_or_nothing_get(char file_to_read[])
 	}	
 	else if (!strcmp(obj1.cs2, obj1.cs3))
 	{
-		printf("************************************************************************\n");
+		printf("\n\n************************************************************************\n\n");
 		sprintf(read_cmd, "cat %s", obj1.fs3);
 		ret = system(read_cmd);
-		printf("************************************************************************\n");
+		printf("\n\n************************************************************************\n\n");
 		if(ret != 0)
 		{
 			printf("Failure Reading from Sector\n");
@@ -57,16 +57,19 @@ void all_or_nothing_get(char file_to_read[])
 	}
 	else
 	{
-		printf("An error might have occured during last write operation\n");
-		printf("Please resolve the conflict manually from among the following options : \n");
+		printf("\n\n***Warning! An error might have occured during last Write operation***\n\n");
+		printf("\n\nPlease resolve the conflict manually from among the following options :\n\n");
 
 		struct last_transaction lt;
 	        lt = search_log_record_entry(file_to_read);
 
 		if(!strcmp(lt.status, "pending"))
 		{
-			printf("-------------------------------------------------------------------\n");
-			printf("\n1)\n");
+			memset(temp, 0, MAX);
+			memset(contents_s1, 0, MAX);
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("\nContents of Sector 1\n");
+			printf("---------------------------------------------------------------------------------------------\n");
 			sprintf(read_cmd, "cat %s", obj1.fs1);
 			FILE *ls1 = popen(read_cmd, "r");
         		while(fgets(temp, sizeof(temp), ls1) != NULL)
@@ -74,13 +77,13 @@ void all_or_nothing_get(char file_to_read[])
 				strcat(contents_s1, temp);
 			}
         		pclose(ls1);
-			printf("SECTOR 1\n%s", contents_s1);
-			
-			printf("-------------------------------------------------------------------\n");
+			printf("%s", contents_s1);
 
 			memset(temp, 0, MAX);
-
-			printf("\n2)\n");
+			memset(contents_s2, 0, MAX);
+			printf("----------------------------------------------------------------------------------------------\n");
+			printf("\nContents of Sector 2\n");
+			printf("----------------------------------------------------------------------------------------------\n");
 			sprintf(read_cmd, "cat %s", obj1.fs2);
 			ls1 = popen(read_cmd, "r");
                 	while(fgets(temp, sizeof(temp), ls1) != NULL)
@@ -88,13 +91,14 @@ void all_or_nothing_get(char file_to_read[])
 				strcat(contents_s2, temp);
 			}
                 	pclose(ls1);
-			printf("SECTOR 2\n%s", contents_s2);
+			printf("%s", contents_s2);
 
-                	printf("-------------------------------------------------------------------\n");
 		
 			memset(temp, 0, MAX);
-
-                	printf("\n3)\n");
+			memset(contents_s3, 0, MAX);
+                	printf("-----------------------------------------------------------------------------------------------\n");
+                	printf("\nContents of Sector 3\n");
+                	printf("-----------------------------------------------------------------------------------------------\n");
 			sprintf(read_cmd, "cat %s", obj1.fs3);
 			ls1 = popen(read_cmd, "r");
                 	while(fgets(temp, sizeof(temp), ls1) != NULL)
@@ -102,13 +106,13 @@ void all_or_nothing_get(char file_to_read[])
 				strcat(contents_s3, temp);
 			}
                 	pclose(ls1);
-			printf("SECTOR 3\n%s", contents_s3);
+			printf("%s", contents_s3);
 
-                	printf("-------------------------------------------------------------------\n");
+                	printf("***********************************************************************************************\n");
 			
 			while(1)
 			{
-				printf("Please choose one version of the file - Enter 1, 2 or 3\n");
+				printf("\nSelect a sector to resolve conflict - Enter 1, 2 or 3\n");
 				scanf("%d", &conflict_choice);
 				if(conflict_choice <1  || conflict_choice >3)
 				{
@@ -132,7 +136,6 @@ void all_or_nothing_get(char file_to_read[])
 				}
 			}
 
-			printf("Here!!!\n");
 			pthread_mutex_unlock(&lock);
 			//Add an entry to Journal Log. 
 			add_log_record_entry(lt.operation, "commit", lt.fname, lt.tid);
@@ -143,13 +146,11 @@ void all_or_nothing_get(char file_to_read[])
 
 void manual_conflict_resolution(struct FileSector *obj1, char contents[], int conflict_choice)
 {
-	printf("Inside Manual Conflict Resolution\n");
-	printf("Contents to be written %s\n", contents);			
+	//printf("Contents to be written %s\n", contents);			
 	int ret;
 	char conflict_cmd[MAX];
 	if(conflict_choice == 1)
 	{
-		printf("Here 1\n");
 		sprintf(conflict_cmd, "echo '%s' > %s", contents, obj1->fs2);
 		ret = system(conflict_cmd);
 		memset(conflict_cmd, 0, MAX);
@@ -158,9 +159,7 @@ void manual_conflict_resolution(struct FileSector *obj1, char contents[], int co
 	}
 	else if(conflict_choice == 2)
 	{
-		printf("Here 2\n");
 		sprintf(conflict_cmd, "echo -e  \'%s\' > %s", contents, obj1->fs1);
-		printf("Here 2 Cmd 1: %s", conflict_cmd);
                 ret = system(conflict_cmd);
 		memset(conflict_cmd, 0, MAX);
 		sprintf(conflict_cmd, "echo '%s' > %s", contents, obj1->fs3);
@@ -168,7 +167,6 @@ void manual_conflict_resolution(struct FileSector *obj1, char contents[], int co
 	}
 	else if(conflict_choice == 3)
 	{
-		printf("Here 3\n");
 		sprintf(conflict_cmd, "echo '%s' > %s", contents, obj1->fs1);
                 ret = system(conflict_cmd);
 		memset(conflict_cmd, 0, MAX);
