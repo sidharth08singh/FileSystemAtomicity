@@ -13,7 +13,7 @@ int start_recovery()
 {
 	pthread_mutex_lock(&lock);
 	struct marked_for_recovery* head;
-	head = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+	head = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery));
 	head->link = NULL;
 	printf("Here in Recovery 1\n");
 	int field1;
@@ -43,6 +43,11 @@ int start_recovery()
 			{
 				if(strstr(buf, "RECOVERY START") == NULL)
 				{
+					field1=0;
+					memset(field2, 0, MAX);
+					memset(field3, 0, MAX);
+					memset(field4, 0, MAX);
+
 					printf("Here in Recovery 4\n");
                                 	printf("Log Entry Encountered : %s\n", buf);
                                 	strcpy(tmp,buf);
@@ -70,30 +75,17 @@ int start_recovery()
 			}
 		}
 	}
-	count = execute_recovery(head);
-	//deallocate_recovery_list(head);
-	//free(head);
 	pthread_mutex_unlock(&lock);
+	count = execute_recovery(head);
 	return count;
 }
-
-/*
-void deallocate_recovery_list(struct marked_for_recovery* head)
-{
-	struct marked_for_recovery* temp;
-	temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
-	temp = head->link;
-	while(temp!=NULL)
-	{
-		head->link = temp->link;
-*/		
 
 int execute_recovery(struct marked_for_recovery* head)
 {
 	printf("In Execute Recovery\n");
 	struct marked_for_recovery* temp;
 	int count = 0; 
-        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery));
         temp = head->link;
         while(temp!=NULL)
         {
@@ -103,6 +95,7 @@ int execute_recovery(struct marked_for_recovery* head)
 			printf("Running Recovery for %s\n", temp->name);
                         all_or_nothing_get(temp->name);
                 }
+		temp = temp->link;
         }
         return count;
 }
@@ -110,25 +103,19 @@ int execute_recovery(struct marked_for_recovery* head)
 struct marked_for_recovery* create_recovery_list(struct marked_for_recovery* head, int field1, char field2[], char field3[], char field4[])
 {
 	printf("In Create Recovery List\n");
-	int isExist;
+	int isExist=0;
 	isExist = check_tid_in_list(head,field1);
 	struct marked_for_recovery* temp;
 	if(isExist == 0) //tid not present in recovery list. Add to list
 	{
 		printf("TID Not Present: Adding TID\n");
-		temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+		temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery));
 
 		temp->link = NULL;
-		/*
-		temp->tid=0;
-		memset(temp->name, 0, MAX);
-		temp->pending = 0;
-		temp->commited = 0;
-		temp->end = 0;
-		*/
 
 		temp->tid = field1;
 		strcpy(temp->name, field3);
+		strcpy(temp->operation, field2);
 
 		if(!strcmp(field4, "pending"))
 			temp->pending = 1;
@@ -159,7 +146,7 @@ int check_tid_in_list(struct marked_for_recovery* head, int field1)
 {
 	printf("In check tid in list\n");
 	struct marked_for_recovery* temp;
-        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery));
         temp = head->link;
         while(temp!=NULL)
         {
@@ -167,6 +154,7 @@ int check_tid_in_list(struct marked_for_recovery* head, int field1)
 		{
                 	return 1;
 		}
+		temp = temp->link;
         }
 	return 0;
 }
@@ -175,7 +163,7 @@ void update_recovery_list(struct marked_for_recovery* head, int field1, char fie
 {
 	printf("In update recovery list\n");
 	struct marked_for_recovery* temp;
-        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery*));
+        temp = (struct marked_for_recovery*)malloc(sizeof(struct marked_for_recovery));
         temp = head->link;
         while(temp!=NULL)
         {
@@ -189,6 +177,7 @@ void update_recovery_list(struct marked_for_recovery* head, int field1, char fie
                         	temp->end = 1;
 			break;
                 }
+		temp = temp->link; 
         }
 }
 	

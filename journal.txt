@@ -58,3 +58,9 @@ RECOVERY START, Sun Apr 26 10:27:09 2015
 RECOVERY START, Sun Apr 26 10:27:36 2015
 RECOVERY START, Sun Apr 26 11:59:14 2015
 RECOVERY START, Sun Apr 26 12:01:07 2015
+6508, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/xen.txt, pending
+6508, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/xen.txt, commit
+6508, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/xen.txt, end
+27661, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, commit
+27661, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, end
+RECOVERY START, Sun Apr 26 19:32:38 2015

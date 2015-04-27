@@ -9,21 +9,21 @@
 #include "WriteFile.h"
 #include "ReadFile.h"
 
-//pthread_mutex_t lock;
+pthread_mutex_t lock1;
 
 void add_log_record_entry(char operation[], char state[], char filename[], int tid)
 {
-	pthread_mutex_lock(&lock);
+	pthread_mutex_lock(&lock1);
 	FILE *fd = NULL;
 	fd = fopen("journal.txt", "a");
 	fprintf(fd, "%d, %s, %s, %s\n", tid, operation, filename, state);
 	fclose(fd);
-	pthread_mutex_unlock(&lock);
+	pthread_mutex_unlock(&lock1);
 }
 
 void add_recovery_entry(int state)
 {
-	pthread_mutex_lock(&lock);
+	pthread_mutex_lock(&lock1);
  	time_t rawtime;
 	struct tm * timeinfo;
   	time ( &rawtime );
@@ -41,7 +41,7 @@ void add_recovery_entry(int state)
 		fprintf(fd, "RECOVERY END, %s", asctime (timeinfo));
 	}
 	fclose(fd);
-	pthread_mutex_unlock(&lock);
+	pthread_mutex_unlock(&lock1);
 }
 
 //Returns Last TID for a filename in the Journal Log. 
@@ -170,9 +170,9 @@ long fsize(FILE* binaryStream)
 void create_tid(struct operation *op1)
 {
 	//create 10 digit transaction id
-	pthread_mutex_lock(&lock);
+	pthread_mutex_lock(&lock1);
 	time_t t;
 	srand((unsigned) time(&t));
 	op1->tid = rand() % 40000;	
-	pthread_mutex_unlock(&lock);
+	pthread_mutex_unlock(&lock1);
 }

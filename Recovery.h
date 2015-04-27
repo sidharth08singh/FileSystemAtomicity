@@ -3,6 +3,7 @@ struct marked_for_recovery
 {
 	int tid;
 	char name[MAX];
+	char operation[MAX];
 	int pending;
 	int commited;
 	int end;
