@@ -14,7 +14,7 @@
 
 char data[MAX];
 
-enum {CREATE, LIST, READ, WRITE, FWRITE1, FWRITE2, MULWRITE, BEGINRECOVERY, ENDRECOVERY};
+enum {CREATE, LIST, READ, WRITE, FWRITE1, FWRITE2, MULWRITE, BEGINRECOVERY, ENDRECOVERY,DELETE};
 
 struct arg_thrd
 {
@@ -158,12 +158,12 @@ void *multithreaded_write(void *arguments)
 	struct arg_thrd *arg_var = (struct arg_thrd *)arguments;
 	struct operation op_mt; 
 
-	op_mt.tid = 0; 
-	create_tid(&op_mt);
 	printf("Transaction ID for this operation is: %d\n", op_mt.tid);
 
 	// Lock the Critical Section : Data to be written comprises critical section. 
 	pthread_mutex_lock(&lock);
+	op_mt.tid = 0;
+        create_tid(&op_mt);
 	system("clear");
 	printf("For %s, Enter the Data to be Written to File:\n", arg_var->arg4);
 	read_input(data);
@@ -252,13 +252,11 @@ int main()
 			
 				op1.tid=0;  //Unset any pre-existing operation ID. 
 				create_tid(&op1);
-				printf("Transaction ID for this operation is : %d\n", op1.tid);
 
 				read_filename(filename, path, CREATE);
 				printf("\n");
 				strcpy(filefullpath, path);
 				strcat(filefullpath, filename);
-				printf("Full Filepath is : %s\n", filefullpath);
 				add_log_record_entry("create", "pending", filefullpath, op1.tid);
 				all_or_nothing_create(filefullpath, op1.tid);	
 				break;
@@ -306,7 +304,6 @@ int main()
 			
 				op1.tid=0; 
 				create_tid(&op1);
-				printf("Transaction ID for this operation is : %d\n", op1.tid);
 
 				read_filename(filename, path, WRITE);
 				printf("\n");
@@ -337,7 +334,6 @@ int main()
 
 				op1.tid=0;
 				create_tid(&op1);
-				printf("Transaction ID for this operation is : %d\n", op1.tid);
 				
 				read_filename(filename, path, FWRITE1);
 				printf("\n");
@@ -368,7 +364,6 @@ int main()
 
 				op1.tid=0;
 				create_tid(&op1);
-				printf("Transaction ID for this operation is : %d\n", op1.tid);
 
 				read_filename(filename, path, FWRITE2);
 				printf("\n");
@@ -550,8 +545,20 @@ int main()
 
 			case 12 : 
 			{
-				printf("OPERATION SELECTED : DELETE\n");
-				break;
+				printf("==============================================\n");
+                                printf("Delete a File\n");
+                                printf("==============================================\n");
+
+                                op1.tid=0;  //Unset any pre-existing operation ID. 
+                                create_tid(&op1);
+
+                                read_filename(filename, path, DELETE);
+                                printf("\n");
+                                strcpy(filefullpath, path);
+                                strcat(filefullpath, filename);
+                                add_log_record_entry("delete", "pending", filefullpath, op1.tid);
+                                all_or_nothing_delete(filefullpath, op1.tid);
+                                break;
 			}
 
 			default:

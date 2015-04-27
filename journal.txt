@@ -53,3 +53,33 @@ RECOVERY START, Mon Apr 27 00:54:34 2015
 RECOVERY END, Mon Apr 27 00:55:27 2015
 RECOVERY START, Mon Apr 27 00:56:14 2015
 RECOVERY END, Mon Apr 27 00:56:14 2015
+13418, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, pending
+15748, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, pending
+13418, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, commit
+13418, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, end
+15748, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, commit
+15748, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, end
+732, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, pending
+3439, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, pending
+35890, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, pending
+732, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, commit
+732, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, end
+3439, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, commit
+3439, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, end
+35890, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, commit
+35890, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, end
+22342, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, pending
+22342, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, commit
+22342, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile1, end
+RECOVERY START, Mon Apr 27 01:38:20 2015
+RECOVERY END, Mon Apr 27 01:38:20 2015
+26806, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile2, pending
+RECOVERY START, Mon Apr 27 01:39:20 2015
+26806, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile2, commit
+26806, write, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile2, end
+RECOVERY END, Mon Apr 27 01:39:37 2015
+39721, delete, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, pending
+39721, delete, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, commit
+39721, delete, /home/sidharth/FileSystemAtomicity/dummy_filesystem/testfile3, end
+RECOVERY START, Mon Apr 27 01:56:24 2015
+RECOVERY END, Mon Apr 27 01:56:24 2015
