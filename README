@@ -1,29 +1,52 @@
 #########################################################
+REQUIREMENTS
+#########################################################
+1) Ubuntu
+2) GCC
+
+
+#########################################################
 INSTALLATION
 #########################################################
 
-step1 : copy the AOS_Project.tar.gz to any $HOME directory on your machine
-step2 : tar -xvzf AOS_Project.tar.gz
+step0 : Change to $HOME directory : cd ~
+step1 : Copy the FileSystemAtomicity.tar.gz to $HOME directory on your machine 
+step2 : Untar the directory : tar -xvzf FileSystemAtomicity.tar.gz 
+step3 : Change to source directory : cd FileSystemAtomicity/
 step3 : make clean
 step4 : make 
+
+Note: The source code is also checked into git. (git clone github.com/sidharth08singh/FileSystemAtomicity.git)
+Note: If cloning from git, make sure that the directory is copied to $HOME directory. 
+
+Caution: This project uses a dummy filesystem directory which is packaged inside the project directory above. For program to work correctly, the source code must be placed and untar-ed in the $HOME directory on a Linux Machine with GCC. 
 
 
 #########################################################
 RUNNING THE PROJECT
 #########################################################
 
-step 1: cd ~/AOS_Project
-step 2: ./project 
+step 1: cd ~/FileSystemAtomicity (change to Project Directory, if not there)
+step 2: Run the executable : ./project 
 
-step 3: An option menu appears. Select among option 1 to 7. The options available as of now are: 
-	1. Create File
+step 3: An option menu will appear. Select among option 1 to 13. 
+	The list of available options are: 
+	
+	1. Create a New File
 	2. List All Files
-	3. Read File
+	3. Read from File
 	4. Write to File
-	5. Faulty Write 1 (Abort before Commit) 
-	6. Faulty Write 2 (Abort after Commit)
-	7. Quit
+	5. Faulty Write 1 (Abort before commit)
+	6. Faulty Write 2 (Abort after commit)
+	7. Multithreaded Write (Two threads write to the same file simultaneously)
+	8. MultiThreaded Write ('n' threads write to the same file simultaneously)
+	9. Multithreaded Write & Read(Two threads write to and read from the same file simultaneously)
+	10. Recovery after system crash during Write
+	11. Sytem Recovery : Check Journal Log, Identify Conflicts, Ask user to Resolve
+	12. Delete a File
+	13. Exit
 
+step 4: Chose any option. Enter whenever user-prompt appears. 
 
 #########################################################
 Points to Note
